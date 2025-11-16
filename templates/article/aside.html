@@ -1,0 +1,72 @@
+{% load blog_tags %}
+
+<div class="col-lg-4">
+
+    <div class="sidebar">
+
+        <div class="sidebar-item search-form">
+            <h3 class="sidebar-title">搜索文章</h3>
+            <form action="{% url 'article:search_article' %}" class="mt-3" method="get">
+
+                <input type="text" name="search_article" required>
+                <button type="submit"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+
+        {% get_all_category as cate_list %}
+        <div class="sidebar-item categories">
+            <h3 class="sidebar-title">文章分类</h3>
+            <ul class="mt-3">
+                {% for cate in cate_list %}
+                    <li style="font-size: 1.1rem; font-weight: bold" class="d-flex justify-content-between">
+                        <a href="{{ cate.get_absolute_url }}">{{ cate.name }}
+                        </a>
+                        <span>({{ cate.num_articles }})</span>
+                    </li>
+                    <hr>
+                {% empty %}
+                    <span style="color: red">暂无分类</span>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="sidebar-item recent-posts">
+            <h3 class="sidebar-title">最新文章</h3>
+
+            <div class="mt-3">
+                {% get_recent_post as recent_posts %}
+                {% for recent_post in recent_posts %}
+                    <div class="post-item mt-3">
+                        <img src="{{ recent_post.cover_thumbnail.url }}" alt="" class="flex-shrink-0">
+                        <div>
+                            <h4>
+                                <a href="{% url 'article:article_detail' recent_post.pk %}">
+                                    {{ recent_post.title|truncatechars:20 }}
+                                </a>
+                            </h4>
+                            <time>{{ recent_post.post_time }}</time>
+                        </div>
+                    </div>
+                {% empty %}
+
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sidebar-item tags">
+            <h3 class="sidebar-title">文章标签</h3>
+            {% get_all_tags as tag_list %}
+            <ul class="mt-3">
+                {% for tag in tag_list %}
+                    <li>
+                        <a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+                    </li>
+                {% empty %}
+                    <span style="color: red">暂无标签</span>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>

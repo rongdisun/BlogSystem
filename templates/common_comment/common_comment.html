@@ -1,0 +1,91 @@
+{% load crispy_forms_tags %}
+{% load comments_tags %}
+{% get_cus_comment_form object as form %}
+
+
+{% if user.is_authenticated %}
+    <hr>
+    <div class="add-comment">
+        <form action="{% url 'comment:post_comment' %}" class="commenting-form" method="post">
+            {% csrf_token %}
+
+            {{ form|crispy }}
+            {{ form.media }}
+            <input type="submit" class="btn btn-primary">
+            <input type="reset" class="btn btn-danger">
+        </form>
+    </div>
+{% else %}
+    <hr>
+    <h4 style="text-align: center">请 <a href="{% url 'user:user_login' %}?next={% firstof request.path '/' %}" style="color: #7abaff;text-decoration: none">登陆</a> 后评论</h4>
+{% endif %}
+
+
+
+<div class="mt-3">
+    {% load mptt_tags %}
+    <h3 class="h3">一共有<span style="color: hotpink">{% get_cus_comment_count object %}</span>条评论</h3>
+    <hr>
+    {% get_cus_comment_list object as comments %}
+    {% recursetree comments %}
+        {% with comment=node %}
+            <div class="comment" id="comment_elem_{{ comment.id }}">
+                <div class="comment-header d-flex justify-content-between">
+                    <div class="user d-flex align-items-center">
+                        <div class="title">
+                            <strong>{{ comment.commenter }}
+                            {% if comment.reply %}
+                               <span style="color: deepskyblue">---></span> {{ comment.reply }}
+                            {% endif %}
+                            </strong>
+                            <span class="date">{{ comment.create_time }}</span>
+                            {% if user.is_authenticated %}
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_comment_elem_{{ comment.id }}" >回复</button>
+                            {% else %}
+                                <a class="btn btn-secondary btn-sm" href="{% url 'user:user_login' %}?next={% firstof request.path '/' %}" >回复</a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>{{ comment.content|safe }}</p>
+            <hr>
+            <!-- 模态框 -->
+            <div class="modal" tabindex="-1" id="modal_comment_elem_{{ comment.id }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- 模态框头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">回复{{ comment.commenter }}</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <!-- 模态框主体 -->
+                        <form action="{% url 'comment:reply_comment' comment.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                {{ form|crispy }}
+                                {{ form.media }}
+                            </div>
+
+                            <!-- 模态框底部 -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+                                <input type="submit" id="reply-comment-send" class="btn btn-primary" value="发送">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 50px">
+                {% if not comment.is_leaf_node %}
+                    <div class="comment" id="comment_elem_{{ comment.id }}">
+                        {{ children }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endwith %}
+    {% endrecursetree %}
+
+</div>

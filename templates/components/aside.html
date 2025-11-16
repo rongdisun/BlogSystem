@@ -1,0 +1,29 @@
+{% load blog_tags %}
+<ul class="list-group">
+
+    <li class="list-group-item active" aria-current="true">文章分类</li>
+    {% get_all_category as cate_list %}
+    {% for cate in cate_list %}
+        <li class="list-group-item d-flex justify-content-between">
+            <a href="{{ cate.get_absolute_url }}" class="text-decoration-none">{{ cate.name }}</a>
+            <span>{{ cate.num_articles }}</span>
+        </li>
+    {% empty %}
+        <span style="color: red">暂无分类</span>
+    {% endfor %}
+
+</ul>
+
+<div class="card  mt-4">
+    <div class="card-header text-bg-primary">文章标签</div>
+    <div class="card-body">
+        {% get_all_tags as tag_list %}
+        {% for tag in tag_list %}
+                <a href="{{ tag.get_absolute_url }}" class="ms-3 text-decoration-none" >
+                    <i class="bi-tag" >{{ tag.name }}</i>
+                </a>
+        {% empty %}
+            <span style="color: red">暂无标签</span>
+        {% endfor %}
+    </div>
+</div>

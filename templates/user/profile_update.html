@@ -1,0 +1,16 @@
+{% extends 'user/user_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block personal %}
+    <div class="row">
+        <div class="col-8 offset-2 mb-5">
+            <form action="{% url 'user:user_profile_update' object.pk %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" class="btn btn-primary">
+                <input type="reset" class="btn btn-danger">
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

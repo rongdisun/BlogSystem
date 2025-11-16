@@ -1,0 +1,57 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark "
+     style="padding-bottom: 0.1rem; padding-top: 0.1rem; background-color: #3b4348">
+    <div class="container">
+        <a class="navbar-brand" href="#">爱分享博客</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'data_analysis:chart_view' %}">数据分析</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'article:publish_article' %}">发布文章</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link disabled"></a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <ul class="nav justify-content-center align-items-center">
+
+                    {% if user.is_authenticated %}
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown">
+                                <img src="{{ user.user_profile.avatar.url }}" alt="hello" width="32" height="32" class="rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'user:user_profile_view' %}">个人信息</a></li>
+                                <li><a class="dropdown-item" href="{% url 'user:user_password' %}">重置密码</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'user:user_logout' %}">退出系统</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div class="d-flex">
+                            <a href="{% url 'user:user_login' %}" class="btn btn-sm btn-success me-2">
+                                登录
+                            </a>
+                            <a href="{% url 'user:user_register' %}" class="btn btn-sm btn-warning">
+                                注册
+                            </a>
+                        </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,75 @@
+{% extends 'article/article_base.html' %}
+
+{% block article_section %}
+    <section id="blog" class="blog">
+        <div data-aos="fade-up">
+            <div class="row g-5">
+                <div class="col-lg-8">
+                    <article class="blog-details">
+
+                        <div class="post-img">
+                            <img src="{{ object.cover.url }}" alt="" class="img-fluid" style="width: 100%">
+                        </div>
+                        <h2 class="title">{{ object.title }}</h2>
+
+                        <div class="meta-top">
+                            <ul>
+                                <li class="d-flex align-items-center">
+                                    <i class="bi bi-person"></i>
+                                    <a href="#">{{ object.author.username }}</a>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <i class="bi bi-clock"></i>
+                                    <a href="#">
+                                    <time >{{ object.last_mod_time }}</time>
+                                </a></li>
+                                <li class="d-flex align-items-center">
+                                    <i class="bi bi-eye"></i>
+                                    <a href="#">{{ object.article_views }}</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="content">
+                            <blockquote>
+                                <p>
+                                    {{ object.summary }}
+                                </p>
+                                <br>
+                                <div class="text-end">-------引言</div>
+
+                            </blockquote>
+                            {{ object.content|safe }}
+                        </div>
+                        <div class="meta-bottom">
+                            <i class="bi bi-folder"></i>
+                            <ul class="cats">
+                                <li><a href="#">{{ object.category }}</a></li>
+                            </ul>
+
+                            <i class="bi bi-tags"></i>
+                            <ul class="tags">
+                                {% for tag in tags %}
+                                	<li><a href="#">{{ tag }}</a></li>
+                                {% empty %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </article>
+
+                    {% include "common_comment/common_comment.html" %}
+                </div>
+                {% include 'article/aside.html' %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block page_js %}
+    <script>
+        $(document).ready(function () {
+            $(" img").addClass("img-fluid")
+        })
+    </script>
+{% endblock %}

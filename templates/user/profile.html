@@ -1,0 +1,71 @@
+{% extends 'user/user_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block personal %}
+    <div class="container py-2 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% if profile %}
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-primary text-white text-center py-4">
+                            <h2 class="mb-0">个人主页</h2>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <img src="{{ profile.avatar.url }}"
+                                     alt="头像"
+                                     class="rounded-circle img-fluid"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-muted">基本信息</h5>
+                                            <p class="mb-2"><strong>账号:</strong> {{ profile.user.userid }}</p>
+                                            <p class="mb-2"><strong>用户名:</strong> {{ profile.user.username }}</p>
+                                            <p class="mb-2"><strong>邮箱:</strong> {{ profile.email }}</p>
+                                            <p class="mb-2"><strong>手机号:</strong> {{ profile.telephone }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-muted">个人信息</h5>
+                                            <p class="mb-2"><strong>性别:</strong> {{ profile.get_sex_display }}
+                                            </p>
+                                            <p class="mb-2">
+                                                <strong>出生日期:</strong> {{ profile.birthdate|date:"Y-m-d"|default:"未设置" }}
+                                            </p>
+                                            <p class="mb-2"><strong>住址:</strong> {{ profile.address }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-light border-0 mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted">证件信息</h5>
+                                    <p class="mb-2">
+                                        <strong>证件类型:</strong> {{ profile.get_identity_type_display }}</p>
+                                    <p class="mb-2"><strong>证件号码:</strong> {{ profile.identity_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light text-center">
+                            <a href="{% url 'user:user_profile_update' profile.pk %}" class="btn btn-outline-primary">编辑资料</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <span class="text-danger mt-5 " style="font-size: 1.5rem">你还没有创建个人信息</span>
+                    <a class="btn btn-primary col-auto" href="{% url 'user:user_profile_create' %}">创建个人信息</a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

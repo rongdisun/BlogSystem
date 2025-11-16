@@ -1,0 +1,56 @@
+{% extends 'article/article_base.html' %}
+
+{% block article_section %}
+
+    <div class="row">
+        <div class="col-12 justify-content-center d-flex">
+            <div id="cate_articles_per" style="width:1000px; height:600px;"></div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 justify-content-center d-flex">
+            <div id="article_views_rank" style="width:1000px; height:600px;"></div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block page_js %}
+    <script>
+        $(document).ready(function () {
+            const cate_articles_per = echarts.init(document.getElementById('cate_articles_per'), 'black', {renderer: 'svg'});
+            const article_views_rank = echarts.init(document.getElementById('article_views_rank'), 'black', {renderer: 'svg'});
+            $(
+                function () {
+
+                    fetchCateArticlesPer();
+                    fetchArticleViewsRank();
+                }
+            );
+
+
+
+            function fetchCateArticlesPer() {
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/article/cate_articles_per/",
+                    dataType: 'json',
+                    success: function (result) {
+                        cate_articles_per.setOption(result);
+                    }
+                });
+            }
+
+            function fetchArticleViewsRank() {
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/article/article_views_rank/",
+                    dataType: 'json',
+                    success: function (result) {
+                        article_views_rank.setOption(result);
+                    }
+                });
+            }
+        })
+    </script>
+{% endblock %}
